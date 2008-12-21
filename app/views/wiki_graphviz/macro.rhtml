@@ -1,0 +1,27 @@
+<img <% if macro[:graph][:maps].size > 0 %>usemap="#<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>" <% end %> class="graphviz-macro-image" src="<%= url_for(
+	:controller => 'wiki', 
+	:action => 'graphviz', 
+	:id => macro[:wiki_id], 
+	:page => macro[:params][:title], 
+	:layout => macro[:params][:layout], 
+	:format => macro[:params][:format], 
+	:version => macro[:params][:version]) %>"/>
+
+<% if macro[:graph][:maps].size > 0 %>
+<map style="display: inline;" name="<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>">
+	<% macro[:graph][:maps].each do |map| %>
+		<area <% if macro[:params][:target] != "" %> target="<%= h macro[:params][:target] %>" <% end %>href="<%= h map[:url] %>" shape="<%= h map[:shape] %>" coords="<%= h map[:positions].join(",") %>"/>
+	<% end %>
+</map>
+<% end %>
+
+<% if macro[:params][:with_source] %>
+	<pre class="wiki-graphviz-source"><code><%= macro[:dottext] %></code></pre>
+<% end %>
+
+<% if macro[:map_index] == 0 %>
+	<% content_for :header_tags do %>
+		<%= stylesheet_link_tag "wiki_graphviz.css", :plugin => "wiki_graphviz_plugin", :media => :all %>
+	<% end %>
+<% end %>
+

@@ -1,0 +1,86 @@
+= Redmine Wiki Graphviz-macro plugin
+
+Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph image.
+
+== Features
+
+* Add wiki macro {{graphviz}} and {{graphviz_me}}
+* Write wiki page as dot format, and the macros makes it graph image.
+
+=== {{graphviz}} macro
+
+* This macro render graph image from other wiki page's content.
+
+    {{graphviz(Foo)}}
+    {{graphviz(option=value,Foo)}}
+    {{graphviz(layout=neato,target=_blank,with_source,Foo)}}
+
+* format={png|jpg}
+* layout={dot|neato|fdp|twopi|circo}
+* target={_blank|any}
+* with_source
+
+=== {{graphviz_me}} macro
+
+* This macro render graph image from the wiki page which is include this macro. 
+* Use this macro *commented out*. If not commented out, renderer fails syntax error.
+
+    // {{graphviz_me()}}
+    // {{graphviz_me(option=value)}}
+
+* format={png|jpg}
+* layout={dot|neato|fdp|twopi|circo}
+* target={_blank|any}
+* with_source
+
+== Requirement
+
+* Redmine 0.8.0 RC1 or later.
+* Graphviz and its ruby binding.  http://www.graphviz.org
+    e.g.) RPMs which are installed in my environment.
+    graphviz-2.20.3-1.el5
+    graphviz-gd-2.20.3-1.el5
+    graphviz-ruby-2.20.3-1.el5
+* memcached (optional)
+
+== Getting the plugin
+
+A copy of the plugin can be downloaded from http://passing.breeze.cc/mt/redmine_plugin
+
+== Install
+
+1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins
+2. Restart Redmine.
+
+=== Optional
+
+* If you want to use caching feature for rendered images, must configure your cache_store.
+* This plugin expects the store like ActiveSupport::Cache::MemCacheStore which provides marshaling when set/get the value. 
+
+1. Setup caching environment, like memcached.
+2. Configure cache_store.
+     e.g.) config/environments/production.rb
+     config.action_controller.perform_caching = true
+     config.action_controller.cache_store = :mem_cache_store, "localhost" 
+3. Restart Redmine.
+4. Login to Redmine as an Administrator
+3. Setup wiki graphviz-macro settings in the Plugin settings panel
+
+== License
+
+This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for details.
+
+== My environment
+
+* CentOS 5.2
+* ruby-1.8.5-5.el5_2.6
+* memcached-1.2.6-1.el5.rf
+* MySQL-server-5.0.51a-tritonn.1.0.10
+* graphviz-2.20.3-1.el5
+* graphviz-gd-2.20.3-1.el5
+* graphviz-ruby-2.20.3-1.el5
+* mongrel-1.1.5
+* mongrel_cluster-1.0.5
+* redmine-0.8.0_RC1
+
+

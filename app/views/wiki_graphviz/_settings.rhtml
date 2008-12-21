@@ -1,0 +1,16 @@
+<p><label>Cache seconds before expire rendered image</label><%= text_field_tag 'settings[cache_seconds]', @settings['cache_seconds'] %>
+<br/>
+If this value greater than 0, caching feature is enabled.
+<br/>
+If you turn on the feature, must configure cache_store.
+<br/>
+This plugin expects the store like ActiveSupport::Cache::MemCacheStore which provides marshaling when set/get the value.
+<br/>
+<br/>
+e.g.) config/environments/production.rb
+<br/>
+config.action_controller.perform_caching = true
+<br/>
+config.action_controller.cache_store = :mem_cache_store, &quot;localhost&quot;
+</p>
+
