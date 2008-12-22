@@ -1,4 +1,6 @@
-<img <% if macro[:graph][:maps].size > 0 %>usemap="#<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>" <% end %> class="graphviz-macro-image" src="<%= url_for(
+<img <% if macro[:graph][:maps].size > 0 %>
+	usemap="#<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>" 
+<% end %> <% if macro[:params][:align].to_s != "" %> align="<%= h macro[:params][:align].to_s %>" <% end %> class="graphviz-macro-image" src="<%= url_for(
 	:controller => 'wiki', 
 	:action => 'graphviz', 
 	:id => macro[:wiki_id], 
