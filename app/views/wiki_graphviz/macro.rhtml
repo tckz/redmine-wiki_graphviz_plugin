@@ -26,13 +26,10 @@
 <a href="<%= href %>" <% if macro[:params][:target] != "" %> target="<%= h macro[:params][:target] %>" <% end %> >
 <% end %>
 
-<img <% if use_map %> usemap="#<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>" <% end %>
-	<% [:align, :width, :height].each do |img_attr| %>
-		<% if macro[:params][img_attr].to_s != "" %> <%= img_attr.to_s %>="<%= h macro[:params][img_attr].to_s %>" <% end %> 
-	<% end %>
-class="graphviz-macro-image" src="<%= url_for(
-	:controller => 'wiki', 
-	:action => 'graphviz', 
+<img <% if use_map %> usemap="#<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>" <% end %> <% [:align, :width, :height].each do |img_attr| %>
+	<% if macro[:params][img_attr].to_s != "" %> <%= img_attr.to_s %>="<%= h macro[:params][img_attr].to_s %>" <% end %> 
+	<% end %> class="graphviz-macro-image" src="<%= url_for(
+	:controller => 'wiki', :action => 'graphviz', 
 	:id => macro[:wiki_id], 
 	:page => macro[:params][:title], 
 	:layout => macro[:params][:layout], 
