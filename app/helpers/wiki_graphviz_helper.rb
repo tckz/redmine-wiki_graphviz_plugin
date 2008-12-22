@@ -250,13 +250,29 @@ private
 				:format => "png",
 				:layout => "dot",
 			}
+
+			need_value = {
+				:format => true, 
+				:lauout => true,
+				:target => true,
+				:href => true,
+				:wiki => true,
+				:align => true,
+				:width => true,
+				:height => true,
+			}
+
 			args.each {|a|
 				k, v = a.split(/=/, 2).map { |e| e.to_s.strip }
 				if k.nil? || k == ""
 					next
 				end
 
-				@macro_params[k.intern] = v.nil? ? true : v.to_s
+				sym = k.intern
+				if need_value[sym] && (v.nil? || v.to_s == "")
+					raise "macro parameter:#{k} needs value"
+				end
+				@macro_params[sym] = v.nil? ? true : v.to_s
 			}
 		end
 	end

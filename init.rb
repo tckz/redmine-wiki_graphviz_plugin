@@ -23,8 +23,8 @@ Render graph image from the wiki page which is specified by macro-args.
 ** target={_blank|any}
 ** with_source
 ** no_map
-** href=URL
 ** wiki=page
+** link_to_image
 ** align=value(e.g. {right|left})
 ** width=value(e.g. 100px, 200%)
 ** height=value(e.g. 100px, 200%)
