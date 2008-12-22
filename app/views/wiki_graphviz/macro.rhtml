@@ -1,6 +1,10 @@
-<img <% if macro[:graph][:maps].size > 0 %>
-	usemap="#<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>" 
-<% end %> <% if macro[:params][:align].to_s != "" %> align="<%= h macro[:params][:align].to_s %>" <% end %> class="graphviz-macro-image" src="<%= url_for(
+<% 
+	use_map = macro[:graph][:maps].size > 0 && !macro[:params][:no_map] ? true : false 
+%>
+<img <% if use_map %> usemap="#<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>" <% end %>
+	<% if macro[:params][:align].to_s != "" %> align="<%= h macro[:params][:align].to_s %>" <% end %> 
+	<% if macro[:params][:width].to_s != "" %> width="<%= h macro[:params][:width].to_s %>" <% end %> 
+class="graphviz-macro-image" src="<%= url_for(
 	:controller => 'wiki', 
 	:action => 'graphviz', 
 	:id => macro[:wiki_id], 
@@ -9,7 +13,7 @@
 	:format => macro[:params][:format], 
 	:version => macro[:params][:version]) %>"/>
 
-<% if macro[:graph][:maps].size > 0 %>
+<% if use_map %>
 <map style="display: inline;" name="<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>">
 	<% macro[:graph][:maps].each do |map| %>
 		<area <% if macro[:params][:target] != "" %> target="<%= h macro[:params][:target] %>" <% end %>href="<%= h map[:url] %>" shape="<%= h map[:shape] %>" coords="<%= h map[:positions].join(",") %>"/>
