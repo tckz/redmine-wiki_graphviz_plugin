@@ -18,7 +18,18 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
 * format={png|jpg}
 * layout={dot|neato|fdp|twopi|circo}
 * target={_blank|any}
-* with_source
+* with_source : Display both image and its source(dot)
+* no_map : Disable clickable map.
+* wiki=page : Link image to specified wiki page.
+* link_to_image : Link image to itself.
+* align=value : Additional attr for IMG.
+   e.g.) right, left
+* width=value : Additional attr for IMG. 
+   It is recommended to use no_map option together.
+   e.g.) 100px, 200%
+* height=value : Additional attr for IMG. 
+   It is recommended to use no_map option together.
+   e.g.) 100px, 200%
 
 === {{graphviz_me}} macro
 
@@ -28,10 +39,9 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
     // {{graphviz_me()}}
     // {{graphviz_me(option=value)}}
 
-* format={png|jpg}
-* layout={dot|neato|fdp|twopi|circo}
-* target={_blank|any}
-* with_source
+* options: See graphviz macro.
+
+EOF
 
 == Requirement
 
