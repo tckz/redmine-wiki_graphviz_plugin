@@ -228,7 +228,7 @@ private
 				@view.controller.countup_macro_index()
 				@view.controller.make_macro_output_by_title(macro_params, wiki_id)
 			rescue => e
-				# formatter.rb catch exception and write e.to_s asis. so escape message.
+				# formatter.rb catch exception and write e.to_s as HTML. so escape message.
 				ex = RuntimeError.new(@view.html_escape e.message)
 				ex.set_backtrace(e.backtrace)
 				raise ex
@@ -247,7 +247,7 @@ private
 				@view.controller.countup_macro_index()
 				@view.controller.make_macro_output_by_text(@content.text, macro_params, wiki_id)
 			rescue => e
-				# formatter.rb catch exception and write e.to_s asis. so escape message.
+				# formatter.rb catch exception and write e.to_s as HTML. so escape message.
 				ex = RuntimeError.new(@view.html_escape e.message)
 				ex.set_backtrace(e.backtrace)
 				raise ex
