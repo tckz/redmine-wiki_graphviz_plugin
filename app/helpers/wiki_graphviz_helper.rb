@@ -216,32 +216,46 @@ private
 		end
 
 		def	graphviz(args, wiki_id)
-			if @content.nil?
-				return	""
-			end
+			begin
+				if @content.nil?
+					return	""
+				end
 
-			title = args.pop.to_s
-			if title == ""
-				raise "With no argument, this macro needs wiki page name"
-			end
+				title = args.pop.to_s
+				if title == ""
+					raise "With no argument, this macro needs wiki page name"
+				end
 
-			set_macro_params(args)
-			macro_params = @macro_params.clone
-			macro_params[:title] = title
-			@view.controller.countup_macro_index()
-			@view.controller.make_macro_output_by_title(macro_params, wiki_id)
+				set_macro_params(args)
+				macro_params = @macro_params.clone
+				macro_params[:title] = title
+				@view.controller.countup_macro_index()
+				@view.controller.make_macro_output_by_title(macro_params, wiki_id)
+			rescue => e
+				# formatter.rb catch exception and write e.to_s asis. so escape message.
+				ex = RuntimeError.new(@view.html_escape e.message)
+				ex.set_backtrace(e.backtrace)
+				raise ex
+			end
 		end
 
 		def	graphviz_me(args, wiki_id, title)
-			if @content.nil?
-				return	""
-			end
+			begin
+				if @content.nil?
+					return	""
+				end
 
-			set_macro_params(args)
-			macro_params = @macro_params.clone
-			macro_params[:title] = title
-			@view.controller.countup_macro_index()
-			@view.controller.make_macro_output_by_text(@content.text, macro_params, wiki_id)
+				set_macro_params(args)
+				macro_params = @macro_params.clone
+				macro_params[:title] = title
+				@view.controller.countup_macro_index()
+				@view.controller.make_macro_output_by_text(@content.text, macro_params, wiki_id)
+			rescue => e
+				# formatter.rb catch exception and write e.to_s asis. so escape message.
+				ex = RuntimeError.new(@view.html_escape e.message)
+				ex.set_backtrace(e.backtrace)
+				raise ex
+			end
 		end
 
 private
