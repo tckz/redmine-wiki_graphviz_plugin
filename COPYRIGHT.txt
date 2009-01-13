@@ -1,7 +1,7 @@
 Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render 
 graph image.
 
-Copyright (C) 2008 tckz<at.tckz atat gmail.com>
+Copyright (C) 2008 tckz<at.tckz@gmail.com>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
