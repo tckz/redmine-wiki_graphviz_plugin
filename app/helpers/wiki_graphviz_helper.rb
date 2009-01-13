@@ -217,10 +217,6 @@ private
 
 		def	graphviz(args, wiki_id)
 			begin
-				if @content.nil?
-					return	""
-				end
-
 				title = args.pop.to_s
 				if title == ""
 					raise "With no argument, this macro needs wiki page name"
