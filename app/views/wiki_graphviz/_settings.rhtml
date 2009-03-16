@@ -12,5 +12,9 @@ e.g.) config/environments/production.rb
 config.action_controller.perform_caching = true
 <br/>
 config.action_controller.cache_store = :mem_cache_store, &quot;localhost&quot;
+<br/>
+<br/>
+Current setting)<br/>
+ActionController::Base.cache_store = <%= h ActionController::Base.cache_store.to_s %><br/>
+ActionController::Base.cache_configured? = <%= h ActionController::Base.cache_configured? ? "true" : "false" %><br/>
 </p>
-
