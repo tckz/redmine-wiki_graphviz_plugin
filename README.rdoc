@@ -83,7 +83,7 @@ This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for
 
 == My environment
 
-* CentOS 5.3
+* CentOS 5.4
 * ruby-1.8.5-5.el5_3.7
 * memcached-1.2.6-1.el5.rf
 * MySQL-server-5.0.51a-tritonn.1.0.10
@@ -91,7 +91,7 @@ This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for
 * graphviz-gd-2.24.0-1.el5
 * graphviz-ruby-2.24.0-1.el5
 * passenger (2.2.5)
-* redmine-0.8.5
+* redmine-0.8.6
 
 
 
