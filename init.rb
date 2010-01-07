@@ -6,8 +6,9 @@ Redmine::Plugin.register :wiki_graphviz_plugin do
   name 'Graphviz Wiki-macro Plugin'
   author 'tckz'
   description 'Render graph image from the wiki contents by Graphviz(http://www.graphviz.org/)'
-  version '0.0.5'
+  version '0.0.6'
 	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
+	requires_redmine '0.8.0'
 
 	Redmine::WikiFormatting::Macros.register do
 
@@ -23,7 +24,7 @@ Render graph image from the wiki page which is specified by macro-args.
 ** target={_blank|any}
 ** with_source
 ** no_map
-** wiki=page
+** wiki=page(which link to)
 ** link_to_image
 ** align=value(e.g. {right|left})
 ** width=value(e.g. 100px, 200%)
