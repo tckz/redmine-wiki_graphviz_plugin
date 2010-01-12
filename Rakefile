@@ -3,7 +3,16 @@ begin
 rescue LoadError => e
 end
 require 'rake/packagetask'
+require 'rake/testtask'
 require 'pathname'
+
+# task :test
+Rake::TestTask.new do |t|
+	t.libs << "test"
+	t.pattern = "test/*/*_test.rb"
+	#t.warning = true
+	t.verbose = true
+end
 
 # task :package
 Rake::PackageTask.new do |p|
