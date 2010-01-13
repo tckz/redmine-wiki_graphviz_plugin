@@ -60,7 +60,11 @@ git://github.com/tckz/redmine-wiki_graphviz_plugin.git
 
 == Install
 
-1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins
+1. Copy the plugin tree into #{RAILS_ROOT}/vendor/plugins/
+    e.g.)
+    #{RAILS_ROOT}/vendor/
+      plugins/
+        wiki_graphviz_plugin/
 2. Restart Redmine.
 
 === Optional
@@ -99,6 +103,6 @@ This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for
 * ruby-1.8.7-p248(from source)
 * mysql-server-5.0.77-3.el5
 * graphviz-2.26.0(from source)
-* redmine-0.9.0-stable branch at 2010/01/07(JST)
+* redmine-0.9-stable branch at 2010/01/07(JST)
 
 
