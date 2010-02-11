@@ -6,7 +6,7 @@ Redmine::Plugin.register :wiki_graphviz_plugin do
   name 'Graphviz Wiki-macro Plugin'
   author 'tckz'
   description 'Render graph image from the wiki contents by Graphviz(http://www.graphviz.org/)'
-  version '0.0.6'
+  version '0.0.7'
 	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
 	requires_redmine '0.8.0'
 
