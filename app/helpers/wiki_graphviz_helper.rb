@@ -229,7 +229,7 @@ private
 				@view.controller.make_macro_output_by_title(macro_params, wiki_id)
 			rescue => e
 				# formatter.rb catch exception and write e.to_s as HTML. so escape message.
-				ex = RuntimeError.new(@view.html_escape(e.message))
+				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
 				ex.set_backtrace(e.backtrace)
 				raise ex
 			end
@@ -248,7 +248,7 @@ private
 				@view.controller.make_macro_output_by_text(@content.text, macro_params, wiki_id)
 			rescue => e
 				# formatter.rb catch exception and write e.to_s as HTML. so escape message.
-				ex = RuntimeError.new(@view.html_escape(e.message))
+				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
 				ex.set_backtrace(e.backtrace)
 				raise ex
 			end
