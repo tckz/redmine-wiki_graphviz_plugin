@@ -45,10 +45,14 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
 
 * Redmine 0.8.0 RC1 or later.
 * Graphviz and its ruby binding.  http://www.graphviz.org
-    e.g.) RPMs which are installed in my environment.
-    graphviz-2.20.3-1.el5
-    graphviz-gd-2.20.3-1.el5
-    graphviz-ruby-2.20.3-1.el5
+    e.g.) RPMs which are installed in my environment(CentOS 5.4).
+      graphviz-2.26.0-1.el5
+      graphviz-gd-2.26.0-1.el5
+      graphviz-ruby-2.26.0-1.el5
+    e.g.) Ubuntu (10.04)
+	  graphviz
+      graphviz-dev
+      libgv-ruby
 * memcached (optional)
 
 == Getting the plugin
