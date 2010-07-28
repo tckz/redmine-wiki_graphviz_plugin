@@ -52,12 +52,13 @@ module WikiGraphvizHelper
 		if !FileTest.directory?(dir)
 			Dir.mkdir(dir)
 		end
-		temp_img = Tempfile.open("graph", dir)
-		temp_img.close
-		fn_img = temp_img.path
-		temp_map = Tempfile.open("map", dir)
-		temp_map.close
-		fn_map = temp_map.path
+
+		temps = {
+			:img => Tempfile.open("graph", dir),
+			:map => Tempfile.open("map", dir),
+		}.each {|k, v|
+			v.close
+		}
 
 		result = {}
 
@@ -88,12 +89,12 @@ module WikiGraphvizHelper
 					ec = 2
 					raise	"layout"
 				end
-				r = Gv.render(g, fmt[:type], fn_img)
+				r = Gv.render(g, fmt[:type], temps[:img].path)
 				if !r
 					ec = 3
 					raise	"render"
 				end
-				r = Gv.render(g, "imap", fn_map)
+				r = Gv.render(g, "imap", temps[:map].path)
 				if !r
 					ec = 4
 					raise	"render imap"
@@ -125,11 +126,11 @@ module WikiGraphvizHelper
 		maps = []
 		begin
 			if !ec.nil? && ec == 0
-				temp_img.open
-				img = temp_img.read
+				temps[:img].open
+				img = temps[:img].read
 
-				temp_map.open
-				temp_map.each {|t|
+				temps[:map].open
+				temps[:map].each {|t|
 					cols = t.split(/ /)
 					if cols[0] == "base"
 						next
@@ -142,8 +143,11 @@ module WikiGraphvizHelper
 			end
 		rescue
 		ensure
-			temp_img.close(true)
-			temp_map.close(true)
+			temps.each {|k, v|
+				if v != nil 
+					v.close(true)
+				end
+			}
 		end
 
 		result[:image] = img
