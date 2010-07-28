@@ -62,13 +62,13 @@ module WikiGraphvizHelper
 
 		result = {}
 
-		pipe = IO.pipe
+		pipes = IO.pipe
 		pid = fork {
 			# child
 
 			# Gv reports errors to stderr immediately.
 			# so, get the message from pipe
-			STDERR.reopen(pipe[1])
+			STDERR.reopen(pipes[1])
 
 			begin
 				require 'gv'
@@ -109,7 +109,7 @@ module WikiGraphvizHelper
 		}
 
 		# parent
-		pipe[1].close
+		pipes[1].close
 
 		Process.waitpid pid
 		stat = $?
@@ -119,8 +119,8 @@ module WikiGraphvizHelper
 			raise "Child process failed. exit=#{ec}"
 		end
 
-		result[:message] = pipe[0].read.to_s.strip
-		pipe[0].close
+		result[:message] = pipes[0].read.to_s.strip
+		pipes[0].close
 
 		img = nil
 		maps = []
