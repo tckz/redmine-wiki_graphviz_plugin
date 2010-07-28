@@ -14,7 +14,7 @@ module WikiGraphvizHelper
 	ALLOWED_FORMAT = {
 		"png" => { :type => "png", :ext => ".png", :content_type => "image/png" },
 		"jpg" => { :type => "jpg", :ext => ".jpg", :content_type => "image/jpeg" },
-	}
+	}.freeze
 
 	def	render_graph(params, dot_text, options = {})
 		layout = decide_layout(params[:layout])
