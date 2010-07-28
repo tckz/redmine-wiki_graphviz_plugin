@@ -49,9 +49,8 @@ module WikiGraphvizHelper
 	def	render_graph_exactly(layout, fmt, dot_text, options = {})
 
 		dir = File.join([RAILS_ROOT, 'tmp', 'wiki_graphviz_plugin'])
-		begin
+		if !FileTest.directory?(dir)
 			Dir.mkdir(dir)
-		rescue
 		end
 		temp_img = Tempfile.open("graph", dir)
 		temp_img.close
