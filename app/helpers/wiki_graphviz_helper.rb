@@ -26,8 +26,8 @@ module WikiGraphvizHelper
 			:dot_text => dot_text,
 		}.to_s)
 		cache_seconds = Setting.plugin_wiki_graphviz_plugin['cache_seconds'].to_i
-		resule = nil
-		if cache_seconds > 0
+		result = nil
+		if cache_seconds > 0 && ActionController::Base.cache_configured?
 			# expect ActiveSupport::Cache::MemCacheStore
 			result = read_fragment name , :raw => false
 		end
