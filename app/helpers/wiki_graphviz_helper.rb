@@ -35,12 +35,12 @@ module WikiGraphvizHelper
 		if !result
 			result = self.render_graph_exactly(layout, fmt, dot_text, options)
 			# expect ActiveSupport::Cache::MemCacheStore
-			if cache_seconds > 0
+			if cache_seconds > 0 && ActionController::Base.cache_configured?
 				write_fragment name, result, :expires_in => cache_seconds, :raw => false
-				RAILS_DEFAULT_LOGGER.debug "cache saved: #{name}"
+				RAILS_DEFAULT_LOGGER.info "cache saved: #{name}"
 			end
 		else
-			RAILS_DEFAULT_LOGGER.debug "from cache: #{name}"
+			RAILS_DEFAULT_LOGGER.info "from cache: #{name}"
 		end
 
 		return result
