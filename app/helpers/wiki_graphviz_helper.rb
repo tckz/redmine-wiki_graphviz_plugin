@@ -37,123 +37,13 @@ module WikiGraphvizHelper
 			# expect ActiveSupport::Cache::MemCacheStore
 			if cache_seconds > 0 && ActionController::Base.cache_configured?
 				write_fragment name, result, :expires_in => cache_seconds, :raw => false
-				RAILS_DEFAULT_LOGGER.info "cache saved: #{name}"
+				RAILS_DEFAULT_LOGGER.info "[wiki_graphviz]cache saved: #{name}"
 			end
 		else
-			RAILS_DEFAULT_LOGGER.info "from cache: #{name}"
+			RAILS_DEFAULT_LOGGER.info "[wiki_graphviz]from cache: #{name}"
 		end
 
 		return result
-	end
-
-	def	render_graph_exactly(layout, fmt, dot_text, options = {})
-
-		dir = File.join([RAILS_ROOT, 'tmp', 'wiki_graphviz_plugin'])
-		if !FileTest.directory?(dir)
-			Dir.mkdir(dir)
-		end
-
-		temps = {
-			:img => Tempfile.open("graph", dir),
-			:map => Tempfile.open("map", dir),
-		}.each {|k, v|
-			v.close
-		}
-
-		result = {}
-
-		pipes = IO.pipe
-		pid = fork {
-			# child
-
-			# Gv reports errors to stderr immediately.
-			# so, get the message from pipe
-			STDERR.reopen(pipes[1])
-
-			begin
-				require 'gv'
-			rescue LoadError
-				exit! 5
-			end
-
-			g = nil
-			ec = 0
-			begin
-				g = Gv.readstring(dot_text)
-				if g.nil?
-					ec = 1
-					raise	"readstring"
-				end
-				r = Gv.layout(g, layout)
-				if !r
-					ec = 2
-					raise	"layout"
-				end
-				r = Gv.render(g, fmt[:type], temps[:img].path)
-				if !r
-					ec = 3
-					raise	"render"
-				end
-				r = Gv.render(g, "imap", temps[:map].path)
-				if !r
-					ec = 4
-					raise	"render imap"
-				end
-			rescue
-			ensure
-				if g
-					Gv.rm(g)
-				end
-			end
-			exit! ec
-		}
-
-		# parent
-		pipes[1].close
-
-		Process.waitpid pid
-		stat = $?
-		ec = stat.exitstatus
-		RAILS_DEFAULT_LOGGER.info("child status: #{stat.inspect}")
-		if (stat.exited? && ec != 0) || !stat.exited?
-			raise "Child process failed. exit=#{ec}"
-		end
-
-		result[:message] = pipes[0].read.to_s.strip
-		pipes[0].close
-
-		img = nil
-		maps = []
-		begin
-			if !ec.nil? && ec == 0
-				temps[:img].open
-				img = temps[:img].read
-
-				temps[:map].open
-				temps[:map].each {|t|
-					cols = t.split(/ /)
-					if cols[0] == "base"
-						next
-					end
-
-					shape = cols.shift
-					url = cols.shift
-					maps.push(:shape => shape, :url => url, :positions => cols)
-				}
-			end
-		rescue
-		ensure
-			temps.each {|k, v|
-				if v != nil 
-					v.close(true)
-				end
-			}
-		end
-
-		result[:image] = img
-		result[:maps] = maps
-		result[:format] = fmt
-		result
 	end
 
 
@@ -198,7 +88,158 @@ module WikiGraphvizHelper
 		@index_macro
 	end
 
+	def	render_graph_exactly(layout, fmt, dot_text, options = {})
+
+		dir = File.join([RAILS_ROOT, 'tmp', 'wiki_graphviz_plugin'])
+		if !FileTest.directory?(dir)
+			Dir.mkdir(dir)
+		end
+
+		temps = {
+			:img => Tempfile.open("graph", dir),
+			:map => Tempfile.open("map", dir),
+			:dot => Tempfile.open("dot", dir),
+		}.each {|k, v|
+			v.close
+		}
+
+		result = {}
+		begin
+			self.create_image_using_fork(layout, fmt, dot_text, result, temps)
+		rescue NotImplementedError, StandardError
+			self.create_image_using_dot(layout, fmt, dot_text, result, temps) 
+		end
+
+		img = nil
+		maps = []
+		begin
+			temps[:img].open
+			# need for Windows.
+			temps[:img].binmode
+			img = temps[:img].read
+
+			temps[:map].open
+			temps[:map].each {|t|
+				cols = t.split(/ /)
+				if cols[0] == "base"
+					next
+				end
+
+				shape = cols.shift
+				url = cols.shift
+				maps.push(:shape => shape, :url => url, :positions => cols)
+			}
+		ensure
+			temps.each {|k, v|
+				if v != nil 
+					v.close(true)
+				end
+			}
+		end
+
+		result[:image] = img
+		result[:maps] = maps
+		result[:format] = fmt
+		result
+	end
+
+	def	create_image_using_dot(layout, fmt, dot_text, result, temps)
+		RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]using dot")
+
+		temps[:dot].open
+		temps[:dot].write(dot_text)
+		temps[:dot].close
+
+		system("dot", "-K#{layout}", "-T#{fmt[:type]}", "-o#{temps[:img].path}", "#{temps[:dot].path}")
+		if !$?.exited? || $?.exitstatus != 0
+			RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]dot image: #{$?.inspect}")
+			raise	"failed to exec dot when creating image."
+		end
+
+		system("dot", "-K#{layout}", "-Timap", "-o#{temps[:map].path}", "#{temps[:dot].path}")
+		if !$?.exited? || $?.exitstatus != 0
+			RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]dot map: #{$?.inspect}")
+			raise	"failed to exec dot when creating map."
+		end
+	end
+
+	def	create_image_using_fork(layout, fmt, dot_text, result, temps)
+		RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]using Gv")
+
+		pipes = IO.pipe
+
+		begin
+			pid = fork {
+				# child
+	
+				# Gv reports errors to stderr immediately.
+				# so, get the message from pipe
+				STDERR.reopen(pipes[1])
+	
+				begin
+					require 'gv'
+				rescue LoadError
+					exit! 5
+				end
+
+				g = nil
+				ec = 0
+				begin
+					g = Gv.readstring(dot_text)
+					if g.nil?
+						ec = 1
+						raise	"readstring"
+					end
+					r = Gv.layout(g, layout)
+					if !r
+						ec = 2
+						raise	"layout"
+					end
+					r = Gv.render(g, fmt[:type], temps[:img].path)
+					if !r
+						ec = 3
+						raise	"render"
+					end
+					r = Gv.render(g, "imap", temps[:map].path)
+					if !r
+						ec = 4
+						raise	"render imap"
+					end
+				rescue
+				ensure
+					if g
+						Gv.rm(g)
+					end
+				end
+				exit! ec
+			}
+
+			# parent
+			pipes[1].close
+
+			Process.waitpid pid
+			stat = $?
+			ec = stat.exitstatus
+			RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]child status: #{stat.inspect}")
+			if (stat.exited? && ec != 0) || !stat.exited?
+				raise "Child process failed. exit=#{ec}"
+			end
+
+			result[:message] = pipes[0].read.to_s.strip
+
+		ensure
+			pipes.each {|p|
+				if !p.closed?
+					p.close
+				end
+			}
+		end
+
+	end
+
 private 
+
+
 	def	decide_format(fmt)
 		fmt = ALLOWED_FORMAT[fmt.to_s.downcase]
 		fmt ||= ALLOWED_FORMAT["png"]
