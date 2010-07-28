@@ -69,7 +69,11 @@ module WikiGraphvizHelper
 			# so, get the message from pipe
 			STDERR.reopen(pipe[1])
 
-			require 'gv'
+			begin
+				require 'gv'
+			rescue LoadError
+				exit! 5
+			end
 
 			g = nil
 			ec = 0
@@ -105,13 +109,15 @@ module WikiGraphvizHelper
 
 		# parent
 		pipe[1].close
-		ec = nil
-		begin
-			Process.waitpid pid
-			ec = $?.exitstatus
-			RAILS_DEFAULT_LOGGER.info("child status: sig=#{$?.termsig}, exit=#{ec}")
-		rescue
+
+		Process.waitpid pid
+		stat = $?
+		ec = stat.exitstatus
+		RAILS_DEFAULT_LOGGER.info("child status: #{stat.inspect}")
+		if (stat.exited? && ec != 0) || !stat.exited?
+			raise "Child process failed. exit=#{ec}"
 		end
+
 		result[:message] = pipe[0].read.to_s.strip
 		pipe[0].close
 
