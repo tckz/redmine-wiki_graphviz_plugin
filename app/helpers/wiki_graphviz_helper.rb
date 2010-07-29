@@ -244,6 +244,9 @@ module WikiGraphvizHelper
 			end
 
 			result[:message] = pipes[0].read.to_s.strip
+			if ec != 0 && result[:message] == ""
+				result[:message] = "Child process failed."
+			end
 
 		ensure
 			pipes.each {|p|
