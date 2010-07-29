@@ -44,7 +44,13 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
 == Requirement
 
 * Redmine 0.8.0 RC1 or later.
-* Graphviz and its ruby binding.  http://www.graphviz.org
+* Graphviz  http://www.graphviz.org
+  * There are 2ways about setting up graphviz for this plugin.
+  * The one is using Gv which is ruby binding of graphviz.
+    * Recommended for unix system.
+  * The other one is using external dot command which is on the PATH.
+    * Recommended for Windows system.
+
     e.g.) RPMs which are installed in my environment(CentOS 5.4).
       graphviz-2.26.0-1.el5
       graphviz-gd-2.26.0-1.el5
@@ -53,6 +59,8 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
       graphviz
       graphviz-dev
       libgv-ruby
+    e.g.) Windows XP Pro SP3(ja)
+      graphviz-2.26.3
 * memcached (optional)
 
 == Getting the plugin
@@ -91,15 +99,15 @@ This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for
 
 == My environment
 
-* CentOS 5.4
-* ruby-1.8.5-5.el5_3.7
+* CentOS 5.5
+* ruby-1.8.7-p299(from source)
 * memcached-1.2.6-1.el5.rf
 * MySQL-server-5.0.51a-tritonn.1.0.10
-* graphviz-2.26.0-1.el5
-* graphviz-gd-2.26.0-1.el5
-* graphviz-ruby-2.26.0-1.el5
-* passenger (2.2.5)
-* redmine-0.8.7
+* graphviz-2.26.3-1.el5
+* graphviz-gd-2.26.3-1.el5
+* graphviz-ruby-2.26.3-1.el5
+* passenger (2.2.15)
+* redmine-1.0.0
 
 == My environment 2
 
@@ -108,5 +116,13 @@ This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for
 * mysql-server-5.0.77-3.el5
 * graphviz-2.26.0(from source)
 * redmine-0.9.2
+
+== My environment 3
+
+* Windows XP Pro SP3(ja)
+* ruby-1.8.7-p299(provided by rumix. http://ruby.morphball.net/rumix/)
+* sqlite-3.7.0
+* graphviz-2.26.3
+* redmine-1.0.0
 
 
