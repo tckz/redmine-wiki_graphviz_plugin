@@ -4,6 +4,9 @@ require	'kconv'
 
 module WikiGraphvizHelper
 
+	class	FalldownDotError < RuntimeError
+	end
+
 	ALLOWED_LAYOUT = {
 		"circo" => 1, 
 		"dot" => 1, 
@@ -107,8 +110,8 @@ module WikiGraphvizHelper
 
 		result = {}
 		begin
-			self.create_image_using_fork(layout, fmt, dot_text, result, temps)
-		rescue NotImplementedError, StandardError
+			self.create_image_using_gv(layout, fmt, dot_text, result, temps)
+		rescue NotImplementedError, FalldownDotError
 			self.create_image_using_dot(layout, fmt, dot_text, result, temps) 
 		end
 
@@ -177,7 +180,7 @@ module WikiGraphvizHelper
 		end
 	end
 
-	def	create_image_using_fork(layout, fmt, dot_text, result, temps)
+	def	create_image_using_gv(layout, fmt, dot_text, result, temps)
 		RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]using Gv")
 
 		pipes = IO.pipe
@@ -235,8 +238,9 @@ module WikiGraphvizHelper
 			stat = $?
 			ec = stat.exitstatus
 			RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]child status: #{stat.inspect}")
-			if (stat.exited? && ec != 0) || !stat.exited?
-				raise "Child process failed. exit=#{ec}"
+			if stat.exited? && ec == 5
+				# Chance to falldown using external dot command.
+				raise FalldownDotError, "failed to load Gv."
 			end
 
 			result[:message] = pipes[0].read.to_s.strip
