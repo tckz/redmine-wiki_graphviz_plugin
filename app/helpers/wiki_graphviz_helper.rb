@@ -1,5 +1,6 @@
 require 'digest/sha2'
 require	'tempfile'
+require	'kconv'
 
 module WikiGraphvizHelper
 
@@ -99,6 +100,7 @@ module WikiGraphvizHelper
 			:img => Tempfile.open("graph", dir),
 			:map => Tempfile.open("map", dir),
 			:dot => Tempfile.open("dot", dir),
+			:err => Tempfile.open("err", dir),
 		}.each {|k, v|
 			v.close
 		}
@@ -153,16 +155,25 @@ module WikiGraphvizHelper
 		temps[:dot].write(dot_text)
 		temps[:dot].close
 
-		system("dot", "-K#{layout}", "-T#{fmt[:type]}", "-o#{temps[:img].path}", "#{temps[:dot].path}")
+		p = proc {|mes|
+			temps[:err].open
+			t = temps[:err].read.to_s.strip
+			t = t.toutf8
+			result[:message] = t != "" ? t : mes
+		}
+
+		system("dot -K#{layout} -T#{fmt[:type]} < \"#{temps[:dot].path}\" > \"#{temps[:img].path}\" 2>\"#{temps[:err].path}\"")
 		if !$?.exited? || $?.exitstatus != 0
 			RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]dot image: #{$?.inspect}")
-			raise	"failed to exec dot when creating image."
+			p.call("failed to execute dot when creating image.")
+			return
 		end
 
-		system("dot", "-K#{layout}", "-Timap", "-o#{temps[:map].path}", "#{temps[:dot].path}")
+		system("dot -K#{layout} -Timap < \"#{temps[:dot].path}\" > \"#{temps[:map].path}\" 2>\"#{temps[:err].path}\"")
 		if !$?.exited? || $?.exitstatus != 0
 			RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]dot map: #{$?.inspect}")
-			raise	"failed to exec dot when creating map."
+			p.call("failed to execute dot when creating map.")
+			return
 		end
 	end
 
