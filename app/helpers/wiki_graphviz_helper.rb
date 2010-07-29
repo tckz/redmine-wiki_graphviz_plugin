@@ -117,6 +117,9 @@ module WikiGraphvizHelper
 			# need for Windows.
 			temps[:img].binmode
 			img = temps[:img].read
+			if img.size == 0
+				img = nil
+			end
 
 			temps[:map].open
 			temps[:map].each {|t|
