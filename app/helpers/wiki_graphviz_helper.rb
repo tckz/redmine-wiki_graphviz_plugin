@@ -219,7 +219,7 @@ module WikiGraphvizHelper
 						ec = 4
 						raise	"render imap"
 					end
-				rescue
+				rescue RuntimeError
 				ensure
 					if g
 						Gv.rm(g)
