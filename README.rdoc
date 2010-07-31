@@ -5,7 +5,7 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
 == Features
 
 * Add wiki macro {{graphviz}} and {{graphviz_me}}
-* Write wiki page as dot format, and the macros makes it graph image.
+* Write wiki page as dot format, and the macros make it graph image.
 
 === {{graphviz}} macro
 
@@ -33,13 +33,22 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
 
 === {{graphviz_me}} macro
 
-* This macro render graph image from the wiki page which is include this macro. 
-* Use this macro *commented out*. If not commented out, renderer fails syntax error.
+* This macro render graph image from the wiki page which includes this macro. 
+* Use this macro *commented out* like below. If it is not commented out, renderer fails syntax error.
 
     // {{graphviz_me()}}
     // {{graphviz_me(option=value)}}
 
 * options: See graphviz macro.
+* Cause of specification about redmine's wiki macro, the macro can't render previewing wiki content.
+
+== Tips
+
+* On Windows, If you want to use the text which is NOT written in English(Such as Japanese) in the graph,  You should specify "fontname" attribute to the object like below.
+
+  somenode [label="some text in Japanese", fontname="MS Gothic"]
+
+  NOTE: "MS Gothic" is just example. You should specify it using real font name. "MS"(ZENAKU) + HANKAKU White space + "Gothic"(ZENAKU KATAKANA)
 
 == Requirement
 
@@ -48,18 +57,22 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
   * There are 2ways about setting up graphviz for this plugin.
   * The one is using Gv which is ruby binding of graphviz.
     * Recommended for unix system.
+	* The plugin uses fork() and IO.pipe to capture STDERR which holds error message output from Gv.
   * The other one is using external dot command which is on the PATH.
-    * Recommended for Windows system.
+    * For Windows system, Only this way of setting is available.
+	* The dot command is executed twice by the plugin when one graph is rendered. First one to render the image. Second one to create clickable map.
 
-    e.g.) RPMs which are installed in my environment(CentOS 5.4).
-      graphviz-2.26.0-1.el5
-      graphviz-gd-2.26.0-1.el5
-      graphviz-ruby-2.26.0-1.el5
-    e.g.) Ubuntu (10.04)
+  * Example of installed graphviz package.
+    
+    e.g.) CentOS 5.5 using Gv.
+      graphviz-2.26.3-1.el5
+      graphviz-gd-2.26.3-1.el5
+      graphviz-ruby-2.26.3-1.el5
+    e.g.) Ubuntu (10.04) using Gv.
       graphviz
       graphviz-dev
       libgv-ruby
-    e.g.) Windows XP Pro SP3(ja)
+    e.g.) Windows XP Pro SP3(ja) using external dot command.
       graphviz-2.26.3
 * memcached (optional)
 
