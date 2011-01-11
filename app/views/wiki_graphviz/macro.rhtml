@@ -4,8 +4,8 @@
 	url_for_rendered_img = url_for(
 		:controller => 'wiki_graphviz',
 		:action => 'graphviz', 
-		:id => macro[:wiki_id], 
-		:page => macro[:params][:title], 
+		:project_id => macro[:project_id], 
+		:id => macro[:params][:title], 
 		:layout => macro[:params][:layout], 
 		:format => macro[:params][:format], 
 		:version => macro[:params][:version]

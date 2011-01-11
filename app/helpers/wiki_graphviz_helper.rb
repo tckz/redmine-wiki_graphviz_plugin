@@ -51,7 +51,7 @@ module WikiGraphvizHelper
 	end
 
 
-	def	make_macro_output_by_title(macro_params, wiki_id)
+	def	make_macro_output_by_title(macro_params, project_id)
 		page = @wiki.find_page(macro_params[:title], :project => @project)
 		if page.nil? || 
 			!User.current.allowed_to?(:view_wiki_pages, page.wiki.project)
@@ -63,17 +63,17 @@ module WikiGraphvizHelper
 		end
 
 		content = page.content_for_version(macro_params[:version])
-		self.make_macro_output_by_text(content.text, macro_params, wiki_id)
+		self.make_macro_output_by_text(content.text, macro_params, project_id)
 	end
 
-	def	make_macro_output_by_text(dottext, macro_params, wiki_id)
+	def	make_macro_output_by_text(dottext, macro_params, project_id)
 		graph = self.render_graph(macro_params, dottext)
 		if !graph[:image]
 			raise "page=#{macro_params[:title]}, error=#{graph[:message]}"
 		end
 
 		macro = {
-			:wiki_id => wiki_id,
+			:project_id => project_id,
 			:params => macro_params,
 			:graph => graph,
 			:dottext => dottext,
@@ -286,7 +286,7 @@ private
 			@view.controller.extend(WikiGraphvizHelper)
 		end
 
-		def	graphviz(args, wiki_id)
+		def	graphviz(args, project_id)
 			begin
 				title = args.pop.to_s
 				if title == ""
@@ -297,7 +297,7 @@ private
 				macro_params = @macro_params.clone
 				macro_params[:title] = title
 				@view.controller.countup_macro_index()
-				@view.controller.make_macro_output_by_title(macro_params, wiki_id)
+				@view.controller.make_macro_output_by_title(macro_params, project_id)
 			rescue => e
 				# wiki_formatting.rb(about redmine 1.0.0) catch exception and write e.to_s into HTML. so escape message.
 				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
@@ -306,7 +306,7 @@ private
 			end
 		end
 
-		def	graphviz_me(args, wiki_id, title)
+		def	graphviz_me(args, project_id, title)
 			begin
 				if @content.nil?
 					return	""
@@ -316,7 +316,7 @@ private
 				macro_params = @macro_params.clone
 				macro_params[:title] = title
 				@view.controller.countup_macro_index()
-				@view.controller.make_macro_output_by_text(@content.text, macro_params, wiki_id)
+				@view.controller.make_macro_output_by_text(@content.text, macro_params, project_id)
 			rescue => e
 				# wiki_formatting.rb(about redmine 1.0.0) catch exception and write e.to_s into HTML. so escape message.
 				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
