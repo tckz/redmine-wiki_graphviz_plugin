@@ -1,6 +1,7 @@
 require 'digest/sha2'
 require	'tempfile'
 require	'kconv'
+require	'fileutils'
 
 module WikiGraphvizHelper
 
@@ -95,8 +96,11 @@ module WikiGraphvizHelper
 	def	render_graph_exactly(layout, fmt, dot_text, options = {})
 
 		dir = File.join([RAILS_ROOT, 'tmp', 'wiki_graphviz_plugin'])
-		if !FileTest.directory?(dir)
-			Dir.mkdir(dir)
+		if !FileTest.exist?(dir)
+			FileUtils.mkdir_p(dir);
+		end
+		if !FileTest.writable?(dir) && !Redmine::Platform.mswin?
+			FileUtils.chmod(0700, dir);
 		end
 
 		temps = {
