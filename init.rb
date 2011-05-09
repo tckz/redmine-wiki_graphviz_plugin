@@ -7,7 +7,7 @@ Redmine::Plugin.register :wiki_graphviz_plugin do
   author 'tckz'
   url "http://passing.breeze.cc/mt/" if respond_to?(:url)
   description 'Render graph image from the wiki contents by Graphviz(http://www.graphviz.org/)'
-  version '0.2.0'
+  version '0.2.1'
 	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
 	requires_redmine :version_or_higher => '1.1.0'
 
