@@ -24,6 +24,11 @@
 			:format => macro[:params][:format] 
 		)
 	end
+
+	img_src = url_for_rendered_img
+	if !macro[:data_scheme].nil?
+		img_src = macro[:data_scheme]
+	end
 %>
 <% if !href.nil? %>
 <a href="<%= href %>" <% if macro[:params][:target] != "" %> target="<%= h macro[:params][:target] %>" <% end %> >
@@ -31,7 +36,7 @@
 
 <img <% if use_map %> usemap="#<%= h "wiki-graphviz-map-#{macro[:map_index]}" %>" <% end %> <% [:align, :width, :height].each do |img_attr| %>
 	<% if macro[:params][img_attr].to_s != "" %> <%= img_attr.to_s %>="<%= h macro[:params][img_attr].to_s %>" <% end %> 
-	<% end %> class="graphviz-macro-image" src="<%= url_for_rendered_img %>"/>
+	<% end %> class="graphviz-macro-image" src="<%= img_src %>"/>
 
 <% if !href.nil? %>
 </a>

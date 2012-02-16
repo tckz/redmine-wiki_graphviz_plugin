@@ -2,6 +2,7 @@ require 'digest/sha2'
 require	'tempfile'
 require	'kconv'
 require	'fileutils'
+require 'base64'
 
 module WikiGraphvizHelper
 
@@ -64,10 +65,10 @@ module WikiGraphvizHelper
 		end
 
 		content = page.content_for_version(macro_params[:version])
-		self.make_macro_output_by_text(content.text, macro_params, project_id)
+		self.make_macro_output_by_text(content.text, macro_params, project_id, false)
 	end
 
-	def	make_macro_output_by_text(dottext, macro_params, project_id)
+	def	make_macro_output_by_text(dottext, macro_params, project_id, using_data_scheme)
 		graph = self.render_graph(macro_params, dottext)
 		if !graph[:image]
 			raise "page=#{macro_params[:title]}, error=#{graph[:message]}"
@@ -80,6 +81,11 @@ module WikiGraphvizHelper
 			:dottext => dottext,
 			:map_index => @index_macro,
 		}
+
+		if using_data_scheme
+			macro[:data_scheme] = "data:#{graph[:format][:content_type]};base64,#{Base64.encode64(graph[:image]).chomp}"
+		end
+
 
     render_to_string :template => 'wiki_graphviz/macro', :layout => false, :locals => {:macro => macro}
 	end
@@ -310,7 +316,18 @@ private
 
 		def	graphviz_me(args, project_id, title)
 			begin
-				if @content.nil?
+				using_data_scheme = false
+				# want to use previewing text.
+				text = @view.controller.params[:content] && @view.controller.params[:content][:text]
+				if !text.nil?
+					using_data_scheme = true
+				end
+
+				if text.nil? && !@content.nil?
+					text = @content.text
+				end
+
+				if text.nil?
 					return	""
 				end
 
@@ -318,7 +335,7 @@ private
 				macro_params = @macro_params.clone
 				macro_params[:title] = title
 				@view.controller.countup_macro_index()
-				@view.controller.make_macro_output_by_text(@content.text, macro_params, project_id)
+				@view.controller.make_macro_output_by_text(text, macro_params, project_id, using_data_scheme)
 			rescue => e
 				# wiki_formatting.rb(about redmine 1.0.0) catch exception and write e.to_s into HTML. so escape message.
 				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
