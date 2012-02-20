@@ -83,7 +83,7 @@ module WikiGraphvizHelper
 		}
 
 		if using_data_scheme
-			macro[:data_scheme] = "data:#{graph[:format][:content_type]};base64,#{Base64.encode64(graph[:image]).chomp}"
+			macro[:data_scheme] = "data:#{graph[:format][:content_type]};base64,#{Base64.encode64(graph[:image]).gsub(/\n/, '')}"
 		end
 
 
