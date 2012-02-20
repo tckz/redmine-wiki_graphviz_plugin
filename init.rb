@@ -33,7 +33,7 @@ Render graph image from the wiki page which is specified by macro-args.
 EOF
 		macro :graphviz do |wiki_content_obj, args|
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
-			m.graphviz(args, params[:project_id])
+			m.graphviz(args)
 		end
 
 		desc <<'EOF'
@@ -46,7 +46,7 @@ Render graph image from the current wiki page.
 EOF
 		macro	:graphviz_me do |wiki_content_obj, args|
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
-			m.graphviz_me(args, params[:project_id], params[:id])
+			m.graphviz_me(args, params[:id])
 		end
 	end
 end

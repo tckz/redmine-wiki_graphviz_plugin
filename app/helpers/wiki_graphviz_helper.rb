@@ -53,8 +53,12 @@ module WikiGraphvizHelper
 	end
 
 
-	def	make_macro_output_by_title(macro_params, project_id)
-		page = @wiki.find_page(macro_params[:title], :project => @project)
+	def	make_macro_output_by_title(macro_params)
+		wiki = @project.wiki
+		if wiki.nil?
+			raise "Wiki not found" 
+		end
+		page = wiki.find_page(macro_params[:title], :project => @project)
 		if page.nil? || 
 			!User.current.allowed_to?(:view_wiki_pages, page.wiki.project)
 			raise "Page(#{macro_params[:title]}) not found" 
@@ -65,17 +69,17 @@ module WikiGraphvizHelper
 		end
 
 		content = page.content_for_version(macro_params[:version])
-		self.make_macro_output_by_text(content.text, macro_params, project_id, false)
+		self.make_macro_output_by_text(content.text, macro_params, false)
 	end
 
-	def	make_macro_output_by_text(dottext, macro_params, project_id, using_data_scheme)
+	def	make_macro_output_by_text(dottext, macro_params, using_data_scheme)
 		graph = self.render_graph(macro_params, dottext)
 		if !graph[:image]
 			raise "page=#{macro_params[:title]}, error=#{graph[:message]}"
 		end
 
 		macro = {
-			:project_id => project_id,
+			:project_id => @project.id,
 			:params => macro_params,
 			:graph => graph,
 			:dottext => dottext,
@@ -292,10 +296,32 @@ private
 
 			@view = view
 			@view.controller.extend(WikiGraphvizHelper)
+			[@content, @view.controller].each {|e|
+				if @project.nil? && e.respond_to?(:project)
+					@project = e.project
+				end
+			}
+
+			if @project.nil? 
+				if @view.params[:controller] == 'projects'
+					project_id_param = :id
+				else
+					project_id_param = :project_id
+				end
+
+				if !@view.params[project_id_param].nil?
+					@project = Project.find(@view.params[project_id_param])
+				end
+			end
 		end
 
-		def	graphviz(args, project_id)
+		def	graphviz(args)
 			begin
+				if @project.nil?
+					RAILS_DEFAULT_LOGGER.info "[wiki_graphviz]project is not defined."
+					return ""
+				end
+
 				title = args.pop.to_s
 				if title == ""
 					raise "With no argument, this macro needs wiki page name"
@@ -305,7 +331,7 @@ private
 				macro_params = @macro_params.clone
 				macro_params[:title] = title
 				@view.controller.countup_macro_index()
-				@view.controller.make_macro_output_by_title(macro_params, project_id)
+				@view.controller.make_macro_output_by_title(macro_params)
 			rescue => e
 				# wiki_formatting.rb(about redmine 1.0.0) catch exception and write e.to_s into HTML. so escape message.
 				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
@@ -314,11 +340,20 @@ private
 			end
 		end
 
-		def	graphviz_me(args, project_id, title)
+		def	graphviz_me(args, title)
 			begin
+				if !@content.nil? && !@content.kind_of?(WikiContent)
+					raise "This macro can be described in wiki page only."
+				end
+
+				if @project.nil?
+					RAILS_DEFAULT_LOGGER.info "[wiki_graphviz]project is not defined."
+					return ""
+				end
+
 				using_data_scheme = false
 				# want to use previewing text.
-				text = @view.controller.params[:content] && @view.controller.params[:content][:text]
+				text = @view.params[:content] && @view.params[:content][:text]
 				if !text.nil?
 					using_data_scheme = true
 				end
@@ -335,7 +370,7 @@ private
 				macro_params = @macro_params.clone
 				macro_params[:title] = title
 				@view.controller.countup_macro_index()
-				@view.controller.make_macro_output_by_text(text, macro_params, project_id, using_data_scheme)
+				@view.controller.make_macro_output_by_text(text, macro_params, using_data_scheme)
 			rescue => e
 				# wiki_formatting.rb(about redmine 1.0.0) catch exception and write e.to_s into HTML. so escape message.
 				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
