@@ -342,7 +342,7 @@ private
 
 		def	graphviz_me(args, title)
 			begin
-				if !@content.nil? && !@content.kind_of?(WikiContent)
+				if !@content.nil? && !@content.kind_of?(WikiContent) && !@content.kind_of?(WikiContent::Version)
 					raise "This macro can be described in wiki page only."
 				end
 
@@ -369,6 +369,7 @@ private
 				set_macro_params(args)
 				macro_params = @macro_params.clone
 				macro_params[:title] = title
+				macro_params[:version] = @view.params[:version]
 				@view.controller.countup_macro_index()
 				@view.controller.make_macro_output_by_text(text, macro_params, using_data_scheme)
 			rescue => e
