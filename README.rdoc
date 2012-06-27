@@ -52,7 +52,7 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
 
 == Requirement
 
-* Redmine 1.3.0 or later.
+* Redmine 2.0.0 or later.
 * Graphviz  http://www.graphviz.org
   * There are 2ways about setting up graphviz for this plugin.
   * The one is using Gv which is ruby binding of graphviz.
@@ -85,10 +85,9 @@ git://github.com/tckz/redmine-wiki_graphviz_plugin.git
 
 == Install
 
-1. Copy the plugin tree into #{RAILS_ROOT}/vendor/plugins/
+1. Copy the plugin tree into #{RAILS_ROOT}/plugins/
     e.g.)
-    #{RAILS_ROOT}/vendor/
-      plugins/
+    #{RAILS_ROOT}/plugins/
         wiki_graphviz_plugin/
 
 2. Make sure the temporary directory writable by the process of redmine.
@@ -120,9 +119,9 @@ This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for
 == My environment
 
 * CentOS 6.2 x64
-* ruby-1.8.7-p352
+* ruby-1.9.3p194
 * mysql-server-5.1.61
 * graphviz-2.26.0
-* redmine-1.3.0
+* redmine-2.0.3
 
 

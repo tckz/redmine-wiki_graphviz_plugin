@@ -26,27 +26,27 @@ module WikiGraphvizHelper
 		layout = decide_layout(params[:layout])
 		fmt = decide_format(params[:format])
 
-		name = Digest::SHA256.hexdigest( {
+		name = "wiki_graphviz_plugin." + Digest::SHA256.hexdigest( {
 			:layout => params[:layout],
 			:format => params[:format],
 			:dot_text => dot_text,
 		}.to_s)
 		cache_seconds = Setting.plugin_wiki_graphviz_plugin['cache_seconds'].to_i
 		result = nil
-		if cache_seconds > 0 && ActionController::Base.cache_configured?
+		if cache_seconds > 0 && ActionController::Base.perform_caching
 			# expect ActiveSupport::Cache::MemCacheStore
-			result = read_fragment name , :raw => false
+			result = Rails.cache.read name , :raw => false
 		end
 
 		if !result
 			result = self.render_graph_exactly(layout, fmt, dot_text, options)
 			# expect ActiveSupport::Cache::MemCacheStore
-			if cache_seconds > 0 && ActionController::Base.cache_configured?
-				write_fragment name, result, :expires_in => cache_seconds, :raw => false
-				RAILS_DEFAULT_LOGGER.info "[wiki_graphviz]cache saved: #{name}"
+			if cache_seconds > 0 && ActionController::Base.perform_caching
+				Rails.cache.write name, result, :expires_in => cache_seconds, :raw => false
+				Rails.logger.info "[wiki_graphviz]cache saved: #{name}"
 			end
 		else
-			RAILS_DEFAULT_LOGGER.info "[wiki_graphviz]from cache: #{name}"
+			Rails.logger.info "[wiki_graphviz]from cache: #{name}"
 		end
 
 		return result
@@ -105,7 +105,7 @@ module WikiGraphvizHelper
 
 	def	render_graph_exactly(layout, fmt, dot_text, options = {})
 
-		dir = File.join([RAILS_ROOT, 'tmp', 'wiki_graphviz_plugin'])
+		dir = File.join([Rails.root, 'tmp', 'wiki_graphviz_plugin'])
 		FileUtils.mkdir_p(dir);
 		if !FileTest.writable?(dir) && !Redmine::Platform.mswin?
 			FileUtils.chmod(0700, dir);
@@ -164,7 +164,7 @@ module WikiGraphvizHelper
 	end
 
 	def	create_image_using_dot(layout, fmt, dot_text, result, temps)
-		RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]using dot")
+		Rails.logger.info("[wiki_graphviz]using dot")
 
 		temps[:dot].open
 		temps[:dot].write(dot_text)
@@ -179,21 +179,21 @@ module WikiGraphvizHelper
 
 		system("dot -K#{layout} -T#{fmt[:type]} < \"#{temps[:dot].path}\" > \"#{temps[:img].path}\" 2>\"#{temps[:err].path}\"")
 		if !$?.exited? || $?.exitstatus != 0
-			RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]dot image: #{$?.inspect}")
+			Rails.logger.info("[wiki_graphviz]dot image: #{$?.inspect}")
 			p.call("failed to execute dot when creating image.")
 			return
 		end
 
 		system("dot -K#{layout} -Timap < \"#{temps[:dot].path}\" > \"#{temps[:map].path}\" 2>\"#{temps[:err].path}\"")
 		if !$?.exited? || $?.exitstatus != 0
-			RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]dot map: #{$?.inspect}")
+			Rails.logger.info("[wiki_graphviz]dot map: #{$?.inspect}")
 			p.call("failed to execute dot when creating map.")
 			return
 		end
 	end
 
 	def	create_image_using_gv(layout, fmt, dot_text, result, temps)
-		RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]using Gv")
+		Rails.logger.info("[wiki_graphviz]using Gv")
 
 		pipes = IO.pipe
 
@@ -249,7 +249,7 @@ module WikiGraphvizHelper
 			Process.waitpid pid
 			stat = $?
 			ec = stat.exitstatus
-			RAILS_DEFAULT_LOGGER.info("[wiki_graphviz]child status: #{stat.inspect}")
+			Rails.logger.info("[wiki_graphviz]child status: #{stat.inspect}")
 			if stat.exited? && ec == 5
 				# Chance to falldown using external dot command.
 				raise FalldownDotError, "failed to load Gv."
@@ -318,7 +318,7 @@ private
 		def	graphviz(args)
 			begin
 				if @project.nil?
-					RAILS_DEFAULT_LOGGER.info "[wiki_graphviz]project is not defined."
+					Rails.logger.info "[wiki_graphviz]project is not defined."
 					return ""
 				end
 
@@ -333,6 +333,7 @@ private
 				@view.controller.countup_macro_index()
 				@view.controller.make_macro_output_by_title(macro_params)
 			rescue => e
+				Rails.logger.warn "[wiki_graphviz]#{e.backtrace.join("\n")}"
 				# wiki_formatting.rb(about redmine 1.0.0) catch exception and write e.to_s into HTML. so escape message.
 				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
 				ex.set_backtrace(e.backtrace)
@@ -347,7 +348,7 @@ private
 				end
 
 				if @project.nil?
-					RAILS_DEFAULT_LOGGER.info "[wiki_graphviz]project is not defined."
+					Rails.logger.info "[wiki_graphviz]project is not defined."
 					return ""
 				end
 
@@ -373,6 +374,7 @@ private
 				@view.controller.countup_macro_index()
 				@view.controller.make_macro_output_by_text(text, macro_params, using_data_scheme)
 			rescue => e
+				Rails.logger.warn "[wiki_graphviz]#{e.backtrace.join("\n")}"
 				# wiki_formatting.rb(about redmine 1.0.0) catch exception and write e.to_s into HTML. so escape message.
 				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
 				ex.set_backtrace(e.backtrace)

@@ -16,5 +16,5 @@ config.action_controller.cache_store = :mem_cache_store, &quot;localhost&quot;
 <br/>
 Current setting)<br/>
 ActionController::Base.cache_store = <%= h ActionController::Base.cache_store.to_s %><br/>
-ActionController::Base.cache_configured? = <%= h ActionController::Base.cache_configured? ? "true" : "false" %><br/>
+ActionController::Base.perform_caching = <%= h ActionController::Base.perform_caching ? "true" : "false" %><br/>
 </p>

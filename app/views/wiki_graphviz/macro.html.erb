@@ -4,7 +4,7 @@
 	url_for_rendered_img = url_for(
 		:controller => 'wiki_graphviz',
 		:action => 'graphviz', 
-		:project_id => macro[:project_id], 
+		:project_id => @project,
 		:id => macro[:params][:title], 
 		:layout => macro[:params][:layout], 
 		:format => macro[:params][:format], 
@@ -17,11 +17,9 @@
 	elsif macro[:params][:wiki].to_s != ""
 		href = url_for(
 			:controller => 'wiki', 
-			:action => 'index', 
-			:id => macro[:wiki_id], 
-			:page => macro[:params][:wiki],
-			:layout => macro[:params][:layout], 
-			:format => macro[:params][:format] 
+			:action => 'show', 
+			:project_id => @project,
+			:id => macro[:params][:wiki],
 		)
 	end
 
