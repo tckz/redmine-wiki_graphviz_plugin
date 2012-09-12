@@ -170,7 +170,7 @@ module WikiGraphvizHelper
 		temps[:dot].write(dot_text)
 		temps[:dot].close
 
-		p = proc {|mes|
+		p = lambda {|mes|
 			temps[:err].open
 			t = temps[:err].read.to_s.strip
 			t = t.toutf8
