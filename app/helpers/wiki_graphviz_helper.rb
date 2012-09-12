@@ -334,8 +334,7 @@ private
 				@view.controller.make_macro_output_by_title(macro_params)
 			rescue => e
 				Rails.logger.warn "[wiki_graphviz]#{e.backtrace.join("\n")}"
-				# wiki_formatting.rb(about redmine 1.0.0) catch exception and write e.to_s into HTML. so escape message.
-				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
+				ex = RuntimeError.new(e.message)
 				ex.set_backtrace(e.backtrace)
 				raise ex
 			end
@@ -375,8 +374,7 @@ private
 				@view.controller.make_macro_output_by_text(text, macro_params, using_data_scheme)
 			rescue => e
 				Rails.logger.warn "[wiki_graphviz]#{e.backtrace.join("\n")}"
-				# wiki_formatting.rb(about redmine 1.0.0) catch exception and write e.to_s into HTML. so escape message.
-				ex = RuntimeError.new(ERB::Util.html_escape(e.message))
+				ex = RuntimeError.new(e.message)
 				ex.set_backtrace(e.backtrace)
 				raise ex
 			end

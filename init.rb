@@ -7,9 +7,9 @@ Redmine::Plugin.register :wiki_graphviz_plugin do
   author 'tckz'
   url "http://passing.breeze.cc/mt/" if respond_to?(:url)
   description 'Render graph image from the wiki contents by Graphviz(http://www.graphviz.org/)'
-  version '0.3.0'
+  version '0.4.0'
 	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
-	requires_redmine :version_or_higher => '2.0.0'
+	requires_redmine :version_or_higher => '2.1.0'
 
 	Redmine::WikiFormatting::Macros.register do
 
@@ -33,7 +33,7 @@ Render graph image from the wiki page which is specified by macro-args.
 EOF
 		macro :graphviz do |wiki_content_obj, args|
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
-			m.graphviz(args)
+			m.graphviz(args).html_safe
 		end
 
 		desc <<'EOF'
@@ -46,7 +46,7 @@ Render graph image from the current wiki page.
 EOF
 		macro	:graphviz_me do |wiki_content_obj, args|
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
-			m.graphviz_me(args, params[:id])
+			m.graphviz_me(args, params[:id]).html_safe
 		end
 	end
 end
