@@ -82,7 +82,7 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
 https://github.com/tckz/redmine-wiki_graphviz_plugin
 
 e.g.)
-git clone git@github.com:tckz/redmine-wiki_graphviz_plugin.git wiki_graphviz_plugin
+git clone git://github.com/tckz/redmine-wiki_graphviz_plugin.git wiki_graphviz_plugin
 
 
 == Install
