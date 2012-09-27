@@ -1,5 +1,9 @@
 require 'redmine'
 
+if File.basename(File.dirname(__FILE__)) != 'wiki_graphviz_plugin'
+	raise "*** Plugin directory name of 'Graphviz Wiki-macro Plugin' is must be 'wiki_graphviz_plugin'"
+end
+
 Rails.logger.info 'Starting wiki_graphviz_plugin for Redmine'
 
 Redmine::Plugin.register :wiki_graphviz_plugin do
@@ -7,7 +11,7 @@ Redmine::Plugin.register :wiki_graphviz_plugin do
   author 'tckz'
   url "http://passing.breeze.cc/mt/" if respond_to?(:url)
   description 'Render graph image from the wiki contents by Graphviz(http://www.graphviz.org/)'
-  version '0.4.0'
+  version '0.4.1'
 	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
 	requires_redmine :version_or_higher => '2.1.0'
 
