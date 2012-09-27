@@ -1,8 +1,5 @@
 require 'redmine'
 
-if File.basename(File.dirname(__FILE__)) != 'wiki_graphviz_plugin'
-	raise "*** Plugin directory name of 'Graphviz Wiki-macro Plugin' is must be 'wiki_graphviz_plugin'"
-end
 
 Rails.logger.info 'Starting wiki_graphviz_plugin for Redmine'
 
@@ -35,7 +32,14 @@ Render graph image from the wiki page which is specified by macro-args.
 ** width=value(e.g. 100px, 200%)
 ** height=value(e.g. 100px, 200%)
 EOF
+
+		plugin_directory = File.basename(File.dirname(__FILE__))
+		plugin_directory_is_valid = plugin_directory == 'wiki_graphviz_plugin'
+
 		macro :graphviz do |wiki_content_obj, args|
+			if !plugin_directory_is_valid
+				raise "*** Plugin directory name of 'Graphviz Wiki-macro Plugin' is must be 'wiki_graphviz_plugin', but '#{plugin_directory}'"
+			end
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
 			m.graphviz(args).html_safe
 		end
@@ -49,6 +53,9 @@ Render graph image from the current wiki page.
 * options: see graphviz macro.
 EOF
 		macro	:graphviz_me do |wiki_content_obj, args|
+			if !plugin_directory_is_valid
+				raise "*** Plugin directory name of 'Graphviz Wiki-macro Plugin' is must be 'wiki_graphviz_plugin', but '#{plugin_directory}'"
+			end
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
 			m.graphviz_me(args, params[:id]).html_safe
 		end
