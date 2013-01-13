@@ -380,6 +380,49 @@ private
 			end
 		end
 
+		def	graphviz_link(args, title, dottext)
+			begin
+				if !@content.nil? && !@content.kind_of?(WikiContent) && !@content.kind_of?(WikiContent::Version)
+					raise "This macro can be described in wiki page only."
+				end
+
+				if @project.nil?
+					Rails.logger.info "[wiki_graphviz]project is not defined."
+					return ""
+				end
+
+				using_data_scheme = false
+				# want to use previewing text.
+				text = @view.params[:content] && @view.params[:content][:text]
+				if !text.nil?
+					using_data_scheme = true
+				end
+
+				if text.nil? && !@content.nil?
+					text = @content.text
+				end
+
+				if text.nil?
+					return	""
+				end
+
+
+				set_macro_params(args)
+				macro_params = @macro_params.clone
+				macro_params[:title] = title
+  			macro_params[:version] = @view.params[:version]
+
+				@view.controller.countup_macro_index()
+				@view.controller.make_macro_output_by_text(dottext, macro_params, using_data_scheme)
+			rescue => e
+				Rails.logger.warn "[wiki_graphviz]#{e.backtrace.join("\n")}"
+				ex = RuntimeError.new(e.message)
+				ex.set_backtrace(e.backtrace)
+				raise ex
+			end
+		end
+
+
 private
 		def	set_macro_params(args)
 			@macro_params = {

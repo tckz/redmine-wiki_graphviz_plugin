@@ -21,7 +21,15 @@ class WikiGraphvizController < ApplicationController
     end
 
     @content = @page.content_for_version(params[:version])
-		graph = self.render_graph(params, @content.text)
+
+		dottext = params[:dottext]
+
+		if dottext.nil?
+			dottext = @content.text
+		end
+
+
+		graph = self.render_graph(params, dottext)
 		if graph[:image]
 			render :text => graph[:image], :layout => false, :content_type => graph[:format][:content_type]
 		else
