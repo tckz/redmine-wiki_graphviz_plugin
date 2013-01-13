@@ -59,9 +59,31 @@ EOF
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
 			m.graphviz_me(args, params[:id]).html_safe
 		end
+
+
+		desc <<'EOF'
+Render graph image from text within the macro command.
+
+  !{{graphviz_link()
+    graphviz commands
+  }}
+  !{{graphviz_link(option=value...,foo)
+    graphviz commands
+  }}
+
+* options: see graphviz macro.
+EOF
+		macro	:graphviz_link do |wiki_content_obj, args, dottext |
+			if !plugin_directory_is_valid
+				raise "*** Plugin directory name of 'Graphviz Wiki-macro Plugin' is must be 'wiki_graphviz_plugin', but '#{plugin_directory}'"
+			end
+			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
+			m.graphviz_link(args, params[:id], dottext).html_safe
+		end
+
 	end
 end
 
 
-
+      
 # vim: set ts=2 sw=2 sts=2:
