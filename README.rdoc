@@ -137,7 +137,7 @@ This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for
 * ruby-1.9.3p194
 * mysql-server-5.1.61-4.el6.x86_64
 * graphviz-2.26.0-7.el6.x86_64
-* redmine-2.1.0
+* redmine-2.2.1-devel
 
 
 
