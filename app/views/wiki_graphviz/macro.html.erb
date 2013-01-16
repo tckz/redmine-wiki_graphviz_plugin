@@ -1,32 +1,31 @@
 <% 
 	use_map = macro[:graph][:maps].size > 0 && !macro[:params][:no_map] ? true : false 
 
-	url_for_rendered_img = url_for(
-		:controller => 'wiki_graphviz',
-		:action => 'graphviz', 
-		:project_id => @project,
-		:id => macro[:params][:title], 
-		:layout => macro[:params][:layout], 
-		:format => macro[:params][:format], 
-		:version => macro[:params][:version],
-		:dottext => macro[:dottext]
-	) 
-
 	href = nil
-	if macro[:params][:link_to_image]
-		href = url_for_rendered_img
-	elsif macro[:params][:wiki].to_s != ""
-		href = url_for(
-			:controller => 'wiki', 
-			:action => 'show', 
-			:project_id => @project,
-			:id => macro[:params][:wiki]
-		)
-	end
-
-	img_src = url_for_rendered_img
 	if !macro[:data_scheme].nil?
 		img_src = macro[:data_scheme]
+	else
+		url_for_rendered_img = url_for(
+			:controller => 'wiki_graphviz',
+			:action => 'graphviz', 
+			:project_id => @project,
+			:id => macro[:params][:title], 
+			:layout => macro[:params][:layout], 
+			:format => macro[:params][:format], 
+			:version => macro[:params][:version]
+		) 
+		img_src = url_for_rendered_img
+
+		if macro[:params][:link_to_image]
+			href = url_for_rendered_img
+		elsif macro[:params][:wiki].to_s != ""
+			href = url_for(
+				:controller => 'wiki', 
+				:action => 'show', 
+				:project_id => @project,
+				:id => macro[:params][:wiki]
+			)
+		end
 	end
 %>
 <% if !href.nil? %>

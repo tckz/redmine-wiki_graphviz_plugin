@@ -79,12 +79,14 @@ module WikiGraphvizHelper
 		end
 
 		macro = {
-			:project_id => @project.id,
 			:params => macro_params,
 			:graph => graph,
 			:dottext => dottext,
 			:map_index => @index_macro,
 		}
+		if !@project.nil?
+			macro[:project_id] = @project.id
+		end
 
 		if using_data_scheme
 			macro[:data_scheme] = "data:#{graph[:format][:content_type]};base64,#{Base64.encode64(graph[:image]).gsub(/\n/, '')}"
