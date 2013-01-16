@@ -8,17 +8,19 @@ Redmine::Plugin.register :wiki_graphviz_plugin do
   author 'tckz'
   url "http://passing.breeze.cc/mt/" if respond_to?(:url)
   description 'Render graph image from the wiki contents by Graphviz(http://www.graphviz.org/)'
-  version '0.4.1'
+  version '0.5.0'
 	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
-	requires_redmine :version_or_higher => '2.1.0'
+	requires_redmine :version_or_higher => '2.2.0'
 
 	Redmine::WikiFormatting::Macros.register do
 
 		desc <<'EOF'
 Render graph image from the wiki page which is specified by macro-args.
 
-  !{{graphviz(Foo)}}
-  !{{graphviz(option=value...,Foo)}}
+<pre>
+{{graphviz(Foo)}}
+{{graphviz(option=value...,Foo)}}
+</pre>
 
 * options are:
 ** format={png|jpg}
@@ -47,8 +49,10 @@ EOF
 		desc <<'EOF'
 Render graph image from the current wiki page.
 
-  // !{{graphviz_me}}
-  // !{{graphviz_me(option=value...)}}
+<pre>
+// {{graphviz_me}}
+// {{graphviz_me(option=value...)}}
+</pre>
 
 * options: see graphviz macro.
 EOF
@@ -64,12 +68,14 @@ EOF
 		desc <<'EOF'
 Render graph image from text within the macro command.
 
-  !{{graphviz_link()
-    graphviz commands
-  }}
-  !{{graphviz_link(option=value...,foo)
-    graphviz commands
-  }}
+<pre>
+{{graphviz_link()
+  graphviz commands
+}}
+{{graphviz_link(option=value...,foo)
+  graphviz commands
+}}
+</pre>
 
 * options: see graphviz macro.
 EOF
