@@ -10,7 +10,7 @@ Redmine::Plugin.register :wiki_graphviz_plugin do
   description 'Render graph image from the wiki contents by Graphviz(http://www.graphviz.org/)'
   version '0.5.0'
 	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
-	requires_redmine :version_or_higher => '2.2.0'
+	requires_redmine :version_or_higher => '2.2.2'
 
 	Redmine::WikiFormatting::Macros.register do
 
