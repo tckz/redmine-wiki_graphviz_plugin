@@ -23,8 +23,8 @@ Render graph image from the wiki page which is specified by macro-args.
 </pre>
 
 * options are:
-** format={png|jpg}
-** layout={dot|neato|fdp|twopi|circo}
+** format={png|jpg|svg}
+** layout={dot|neato|fdp|twopi|circo|osage|patchwork|sfdp}
 ** target={_blank|any}
 ** with_source
 ** no_map

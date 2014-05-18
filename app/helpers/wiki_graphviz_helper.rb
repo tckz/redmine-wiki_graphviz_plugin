@@ -15,6 +15,9 @@ module WikiGraphvizHelper
 		"fdp" => 1, 
 		"neato" => 1, 
 		"twopi" => 1,
+		"osage"  => 1,
+		"patchwork"  => 1,
+		"sfdp" => 1,
 	}.freeze
 
 	ALLOWED_FORMAT = {
