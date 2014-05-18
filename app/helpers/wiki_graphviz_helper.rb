@@ -23,6 +23,10 @@ module WikiGraphvizHelper
 	ALLOWED_FORMAT = {
 		"png" => { :type => "png", :ext => ".png", :content_type => "image/png" },
 		"jpg" => { :type => "jpg", :ext => ".jpg", :content_type => "image/jpeg" },
+		"svg" => { 
+			:type => "svg", :ext => ".svg", :content_type => "image/svg+xml" ,
+			:inline => true,
+		},
 	}.freeze
 
 	def	render_graph(params, dot_text, options = {})
@@ -96,7 +100,24 @@ module WikiGraphvizHelper
 		end
 
 
-    render_to_string :template => 'wiki_graphviz/macro', :layout => false, :locals => {:macro => macro}
+		fmt = decide_format(macro_params[:format])
+		inline_default = fmt[:inline]
+		inline_allowed = !inline_default.nil?
+		inline_opt = macro_params[:inline].to_s.downcase
+		output_inline = inline_allowed && 
+			!macro_params[:with_source] &&
+			!(inline_opt != "" && inline_opt != "true" || 
+				(inline_opt == "" && inline_default == false)) 
+		if output_inline
+			return render_to_string  :layout => false, 
+				:template => "wiki_graphviz/inline_#{fmt[:type]}", 
+				:locals => {:macro => macro}
+		end
+
+
+		render_to_string :layout => false, 
+			:template => 'wiki_graphviz/macro', 
+			:locals => {:macro => macro}
 	end
 
 	def	countup_macro_index
@@ -418,6 +439,7 @@ private
 			}
 
 			need_value = {
+				:inline => true, 
 				:format => true, 
 				:lauout => true,
 				:target => true,

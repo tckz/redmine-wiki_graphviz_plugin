@@ -8,9 +8,9 @@ Redmine::Plugin.register :wiki_graphviz_plugin do |plugin|
   author 'tckz'
   url "http://passing.breeze.cc/mt/" if respond_to?(:url)
   description 'Render graph image from the wiki contents by Graphviz(http://www.graphviz.org/)'
-  version '0.5.0'
+  version '0.6.0'
 	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
-	requires_redmine :version_or_higher => '2.2.2'
+	requires_redmine :version_or_higher => '2.5.1'
 
 	Redmine::WikiFormatting::Macros.register do
 
@@ -22,17 +22,20 @@ Render graph image from the wiki page which is specified by macro-args.
 {{graphviz(option=value...,Foo)}}
 </pre>
 
-* options are:
+* Available options are below.
 ** format={png|jpg|svg}
 ** layout={dot|neato|fdp|twopi|circo|osage|patchwork|sfdp}
-** target={_blank|any}
-** with_source
-** no_map
-** wiki=page(which link to)
-** link_to_image
-** align=value(e.g. {right|left})
+** inline={true|false}
+*** If svg format is specified, Its default output is inline SVG. If inline is false, img tag will be used.
+** target={_blank|any} (*1)
+** with_source (*1)
+** no_map (*1)
+** wiki=page(which link to) (*1)
+** link_to_image (*1)
+** align=value(e.g. {right|left}) (*1)
 ** width=value(e.g. 100px, 200%)
 ** height=value(e.g. 100px, 200%)
+* (*1): These options do not affect to the inline SVG.
 EOF
 
 		plugin_directory = File.basename(File.dirname(__FILE__))
@@ -73,7 +76,7 @@ Render graph image from text within the macro command.
 {{graphviz_link()
   graphviz commands
 }}
-{{graphviz_link(option=value...,foo)
+{{graphviz_link(option=value...)
   graphviz commands
 }}
 </pre>

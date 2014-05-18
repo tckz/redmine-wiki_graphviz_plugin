@@ -1,0 +1,23 @@
+<% 
+	require 'rexml/document'
+
+	# macro[:graph][:image] is output of "dot -Tsvg". 
+	# Usually, dot's output is treated as binary. 
+	# But it is treated as utf-8 text in this context.
+	svg_xml = String.new(macro[:graph][:image]).force_encoding("utf-8")
+	if !svg_xml.valid_encoding?
+		raise "*** Invalid utf-8 text."
+	end
+
+	doc = REXML::Document.new(svg_xml)
+	el_svg = doc.elements["/svg"]
+	[:width, :height].each {|img_attr|
+		if macro[:params][img_attr].to_s != ""
+			el_svg.attributes[img_attr.to_s] = macro[:params][img_attr].to_s
+		end
+	}
+%>
+<div class="wiki-graphviz-inline">
+<%== el_svg.to_s %>
+</div>
+

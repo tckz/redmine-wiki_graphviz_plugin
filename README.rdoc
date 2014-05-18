@@ -15,14 +15,16 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
     {{graphviz(option=value,Foo)}}
     {{graphviz(layout=neato,target=_blank,with_source,Foo)}}
 
-* format={png|jpg}
+* format={png|jpg|svg}
 * layout={dot|neato|fdp|twopi|circo}
-* target={_blank|any}
-* with_source : Display both image and its source(dot)
-* no_map : Disable clickable map.
-* wiki=page : Link image to specified wiki page.
-* link_to_image : Link image to itself.
-* align=value : Additional attr for IMG.
+* inline={true|false}
+   If svg format is specified, Its default output is inline SVG. If inline is false, img tag will be used.
+* target={_blank|any} (*1)
+* with_source : Display both image and its source(dot) (*1)
+* no_map : Disable clickable map. (*1)
+* wiki=page : Link image to specified wiki page. (*1)
+* link_to_image : Link image to itself. (*1)
+* align=value : Additional attr for IMG. (*1)
    e.g.) right, left
 * width=value : Additional attr for IMG. 
    It is recommended to use no_map option together.
@@ -30,6 +32,7 @@ Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph ima
 * height=value : Additional attr for IMG. 
    It is recommended to use no_map option together.
    e.g.) 100px, 200%
+* (*1): These options do not affect to the inline SVG.
 
 === {{graphviz_me}} macro
 
@@ -141,5 +144,5 @@ This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for
 * ruby-2.0.0p247
 * MySQL-server-5.6.17-1.el6.x86_64
 * redmine-2.5.1
-* graphviz-2.26.0-10.el6.x86_64
+* graphviz-2.38.0-1.el6.x86_64
 
