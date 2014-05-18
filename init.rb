@@ -3,7 +3,7 @@ require 'redmine'
 
 Rails.logger.info 'Starting wiki_graphviz_plugin for Redmine'
 
-Redmine::Plugin.register :wiki_graphviz_plugin do
+Redmine::Plugin.register :wiki_graphviz_plugin do |plugin|
   name 'Graphviz Wiki-macro Plugin'
   author 'tckz'
   url "http://passing.breeze.cc/mt/" if respond_to?(:url)
@@ -36,12 +36,15 @@ Render graph image from the wiki page which is specified by macro-args.
 EOF
 
 		plugin_directory = File.basename(File.dirname(__FILE__))
-		plugin_directory_is_valid = plugin_directory == 'wiki_graphviz_plugin'
+
+		check_plugin_directory = lambda {
+			if plugin_directory != plugin.id.to_s
+				raise "*** Plugin directory name of 'Graphviz Wiki-macro Plugin' is must be '#{plugin.id}', but '#{plugin_directory}'"
+			end
+		}
 
 		macro :graphviz do |wiki_content_obj, args|
-			if !plugin_directory_is_valid
-				raise "*** Plugin directory name of 'Graphviz Wiki-macro Plugin' is must be 'wiki_graphviz_plugin', but '#{plugin_directory}'"
-			end
+			check_plugin_directory.call
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
 			m.graphviz(args).html_safe
 		end
@@ -57,9 +60,7 @@ Render graph image from the current wiki page.
 * options: see graphviz macro.
 EOF
 		macro	:graphviz_me do |wiki_content_obj, args|
-			if !plugin_directory_is_valid
-				raise "*** Plugin directory name of 'Graphviz Wiki-macro Plugin' is must be 'wiki_graphviz_plugin', but '#{plugin_directory}'"
-			end
+			check_plugin_directory.call
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
 			m.graphviz_me(args, params[:id]).html_safe
 		end
@@ -80,9 +81,7 @@ Render graph image from text within the macro command.
 * options: see graphviz macro.
 EOF
 		macro	:graphviz_link do |wiki_content_obj, args, dottext |
-			if !plugin_directory_is_valid
-				raise "*** Plugin directory name of 'Graphviz Wiki-macro Plugin' is must be 'wiki_graphviz_plugin', but '#{plugin_directory}'"
-			end
+			check_plugin_directory.call
 			m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
 			m.graphviz_link(args, params[:id], dottext).html_safe
 		end
