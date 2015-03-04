@@ -4,13 +4,13 @@ require 'redmine'
 Rails.logger.info 'Starting wiki_graphviz_plugin for Redmine'
 
 Redmine::Plugin.register :wiki_graphviz_plugin do |plugin|
+	requires_redmine :version_or_higher => '3.0.0'
   name 'Graphviz Wiki-macro Plugin'
   author 'tckz'
-  url "http://passing.breeze.cc/mt/" if respond_to?(:url)
+  url "http://passing.breeze.cc/mt/"
   description 'Render graph image from the wiki contents by Graphviz(http://www.graphviz.org/)'
-  version '0.6.0'
+  version '0.7.0'
 	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
-	requires_redmine :version_or_higher => '2.5.1'
 
 	Redmine::WikiFormatting::Macros.register do
 

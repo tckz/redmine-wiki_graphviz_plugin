@@ -38,22 +38,10 @@ module WikiGraphvizHelper
 			:format => params[:format],
 			:dot_text => dot_text,
 		}.to_s)
-		cache_seconds = Setting.plugin_wiki_graphviz_plugin['cache_seconds'].to_i
-		result = nil
-		if cache_seconds > 0 && ActionController::Base.perform_caching
-			# expect ActiveSupport::Cache::MemCacheStore
-			result = Rails.cache.read name , :raw => false
-		end
-
-		if !result
-			result = self.render_graph_exactly(layout, fmt, dot_text, options)
-			# expect ActiveSupport::Cache::MemCacheStore
-			if cache_seconds > 0 && ActionController::Base.perform_caching
-				Rails.cache.write name, result, :expires_in => cache_seconds, :raw => false
-				Rails.logger.info "[wiki_graphviz]cache saved: #{name}"
-			end
-		else
-			Rails.logger.info "[wiki_graphviz]from cache: #{name}"
+		cache_seconds = Setting.plugin_wiki_graphviz_plugin['cache_seconds'].to_i || 600
+		result = Rails.cache.fetch(name, :raw => false, :expires_in => cache_seconds) do
+			Rails.logger.info "[wiki_graphviz]not in cache: #{name}"
+			self.render_graph_exactly(layout, fmt, dot_text, options)
 		end
 
 		return result
@@ -462,6 +450,16 @@ private
 				end
 				@macro_params[sym] = v.nil? ? true : v.to_s
 			}
+		end
+	end
+
+
+	class ViewListener < Redmine::Hook::ViewListener
+		def view_layouts_base_html_head(context)
+			context[:controller].send(:render_to_string,
+				:template => 'wiki_graphviz/_head',
+				:layout => false,
+				:locals => {:context => context})
 		end
 	end
 end

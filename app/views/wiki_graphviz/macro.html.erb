@@ -52,9 +52,3 @@
 	<pre class="wiki-graphviz-source"><code><%= macro[:dottext] %></code></pre>
 <% end %>
 
-<% if macro[:map_index] == 0 %>
-	<% content_for :header_tags do %>
-		<%= stylesheet_link_tag "wiki_graphviz.css", :plugin => "wiki_graphviz_plugin", :media => :all %>
-	<% end %>
-<% end %>
-
