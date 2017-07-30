@@ -181,9 +181,9 @@ See COPYRIGHT.txt and GPL.txt for details.
 
 ## My environment
 
-* CentOS 6.6 x64
-* ruby-2.2.0p0
-* MySQL-server-5.6.17-1.el6.x86_64
-* redmine-3.0.0
-* graphviz-2.38.0-1.el6.x86_64
+* CentOS 7.3 x64
+* ruby-2.2.0p648
+* redmine-3.4.2
+* graphviz-2.30.1-19.el7.x86_64
+
 
