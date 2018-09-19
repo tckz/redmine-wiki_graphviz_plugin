@@ -1,6 +1,7 @@
-# Redmine Wiki Graphviz-macro plugin
+Redmine Wiki Graphviz-macro plugin
+===
 
-Redmine Wiki Graphviz-macro plugin will allow Redmine's wiki to render graph image.
+Redmine Wiki Graphviz-macro plugin allow Redmine's wiki to render graph image.
 
 ## Features
 
@@ -181,9 +182,9 @@ See COPYRIGHT.txt and GPL.txt for details.
 
 ## My environment
 
-* CentOS 7.3 x64
-* ruby-2.2.0p648
-* redmine-3.4.2
-* graphviz-2.30.1-19.el7.x86_64
+* CentOS 7.5 x64
+* ruby-2.4.3p205
+* redmine-3.4.6
+* graphviz-2.30.1-21.el7.x86_64
 
 
