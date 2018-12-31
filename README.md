@@ -1,7 +1,7 @@
 Redmine Wiki Graphviz-macro plugin
 ===
 
-Redmine Wiki Graphviz-macro plugin allow Redmine's wiki to render graph image.
+Redmine Wiki Graphviz-macro plugin make Redmine's wiki able to render graph image.
 
 ## Features
 
@@ -67,14 +67,6 @@ Redmine Wiki Graphviz-macro plugin allow Redmine's wiki to render graph image.
 
 ## Tips
 
-* On Windows, If you want to use the text which is NOT written in English(Such as Japanese) in the graph,  You should specify "fontname" attribute to the object like below.
-
-	```
-  somenode [label="some text in Japanese", fontname="MS Gothic"]
-	```
-
-	NOTE: "MS Gothic" is just example. You should specify it using real font name. "MS"(ZENAKU) + HANKAKU White space + "Gothic"(ZENAKU KATAKANA)
-
 * Example
 
 	```
@@ -93,7 +85,7 @@ Redmine Wiki Graphviz-macro plugin allow Redmine's wiki to render graph image.
 
 ## Requirement
 
-* Redmine 3.0.0 or later.
+* Redmine 4.0.0 or later.
 * ruby 2.2
 * Graphviz  http://www.graphviz.org
 	* There are 2ways about setting up graphviz for this plugin.
@@ -105,8 +97,7 @@ Redmine Wiki Graphviz-macro plugin allow Redmine's wiki to render graph image.
 		* The dot command is executed twice by the plugin when one graph is rendered. First one to render the image. Second one to create clickable map.
 
   * Example of installed graphviz package.
-    
-		```
+    ```
     e.g.) CentOS 5.5 using Gv.
       graphviz-2.26.3-1.el5
       graphviz-gd-2.26.3-1.el5
@@ -115,9 +106,7 @@ Redmine Wiki Graphviz-macro plugin allow Redmine's wiki to render graph image.
       graphviz
       graphviz-dev
       libgv-ruby
-    e.g.) Windows XP Pro SP3(ja) using external dot command.
-      graphviz-2.26.3
-		```
+    ```
 * memcached (optional)
 
 ## Getting the plugin
@@ -155,18 +144,22 @@ git clone git://github.com/tckz/redmine-wiki_graphviz_plugin.git wiki_graphviz_p
 ### Optional
 
 * If you want to use caching feature for rendered images, must configure your cache_store.
-* This plugin expects the store like ```ActiveSupport::Cache::MemCacheStore``` which provides marshaling when set/get the value. 
+* This plugin expects the store like ```ActiveSupport::Cache::DalliStore``` which provides marshaling when set/get the value. 
 
-<!-- dummy for beaking list -->
+<!-- dummy for breaking list -->
 
 1. Setup caching environment, like memcached.
+1. Install gem for caching.
+   ```
+   # e.g.) cd $RAILS_ROOT
+   $ bundle add dalli
+   ```
 1. Configure cache_store.
-
-	```
-     e.g.) config/environments/production.rb
-     config.action_controller.perform_caching = true
-     config.action_controller.cache_store = :mem_cache_store, "localhost" 
-	```
+   ```
+   e.g.) config/environments/production.rb
+   config.action_controller.perform_caching = true
+   config.action_controller.cache_store = :dalli_cache_store, "localhost"
+   ```
 1. Restart Redmine.
 1. Login to Redmine as an Administrator.
 1. Setup wiki graphviz-macro settings in the Plugin settings panel.
@@ -182,9 +175,11 @@ See COPYRIGHT.txt and GPL.txt for details.
 
 ## My environment
 
-* CentOS 7.5 x64
-* ruby-2.4.3p205
-* redmine-3.4.6
-* graphviz-2.30.1-21.el7.x86_64
+* Based on docker image: redmine:4  
+  https://hub.docker.com/_/redmine/
+  * ruby-2.5.3p105
+  * redmine-4.0.0
+* graphviz-2.38.0-17
+* dalli 2.7.9
 
 

@@ -1,12 +1,12 @@
 
 class WikiGraphvizController < ApplicationController
 	unloadable
-  before_filter :find_wiki, :wiki_authorize
+  before_action :find_wiki, :wiki_authorize
 
 	include	WikiGraphvizHelper
 
   def graphviz
-    @page = @wiki.find_page(params[:id], :project => @project)
+    @page = @wiki.find_page(params[:id])
     if @page.nil?
       render_404
 			return
@@ -28,10 +28,9 @@ class WikiGraphvizController < ApplicationController
 			dottext = @content.text
 		end
 
-
 		graph = self.render_graph(params, dottext)
 		if graph[:image]
-			render :text => graph[:image], :layout => false, :content_type => graph[:format][:content_type]
+			render :plain => graph[:image], :layout => false, :content_type => graph[:format][:content_type]
 		else
 			if graph[:message]
 				logger.error("graphviz: '#{graph[:message]}'")
