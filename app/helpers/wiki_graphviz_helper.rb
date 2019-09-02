@@ -323,8 +323,13 @@ private
 					project_id_param = :project_id
 				end
 
-				if !@view.params[project_id_param].nil?
-					@project = Project.find(@view.params[project_id_param])
+				if @view.params[:controller] == 'issues' then
+					@project = Issue.find(@view.params[:id]).project
+					@view.params[:project_id] = @project.id
+				else
+					if !@view.params[project_id_param].nil?
+						@project = Project.find(@view.params[project_id_param])
+					end
 				end
 			end
 		end
