@@ -86,7 +86,7 @@ Redmine Wiki Graphviz-macro plugin make Redmine's wiki able to render graph imag
 ## Requirement
 
 * Redmine 4.0.0 or later.
-* ruby 2.2
+* ruby 2.6
 * Graphviz  http://www.graphviz.org
 	* There are 2ways about setting up graphviz for this plugin.
 	* The one is using Gv which is ruby binding of graphviz.
@@ -177,9 +177,9 @@ See COPYRIGHT.txt and GPL.txt for details.
 
 * Based on docker image: redmine:4  
   https://hub.docker.com/_/redmine/
-  * ruby-2.5.3p105
-  * redmine-4.0.0
-* graphviz-2.38.0-17
-* dalli 2.7.9
+  * ruby 2.6.5p114
+  * redmine 4.0.6
+* graphviz-2.40.1-6
+* dalli 2.7.10
 
 
