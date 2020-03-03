@@ -115,7 +115,7 @@ https://github.com/tckz/redmine-wiki_graphviz_plugin
 
 e.g.)
 ```
-git clone git://github.com/tckz/redmine-wiki_graphviz_plugin.git wiki_graphviz_plugin
+git clone https://github.com/cosmoBots/redmine-wiki_graphviz_plugin.git wiki_graphviz_plugin
 ```
 
 
