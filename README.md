@@ -175,10 +175,9 @@ See COPYRIGHT.txt and GPL.txt for details.
 
 ## My environment
 
-* Based on docker image: redmine:4.0.6  
+* Based on docker image: redmine:5  
   https://hub.docker.com/_/redmine/
-  * ruby 2.6.5p114
-* graphviz-2.40.1-6
-* dalli 2.7.10
-
-
+	* ruby-3.1.2p20
+	* redmine-5.0.2
+* graphviz-2.43.0
+* dalli 3.2.2
