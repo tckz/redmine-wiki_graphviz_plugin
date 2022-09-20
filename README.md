@@ -115,7 +115,7 @@ https://github.com/tckz/redmine-wiki_graphviz_plugin
 
 e.g.)
 ```
-git clone git://github.com/tckz/redmine-wiki_graphviz_plugin.git wiki_graphviz_plugin
+git clone https://github.com/tckz/redmine-wiki_graphviz_plugin.git wiki_graphviz_plugin
 ```
 
 
@@ -149,20 +149,20 @@ git clone git://github.com/tckz/redmine-wiki_graphviz_plugin.git wiki_graphviz_p
 <!-- dummy for breaking list -->
 
 1. Setup caching environment, like memcached.
-1. Install gem for caching.
+2. Install gem for caching.
    ```
    # e.g.) cd $RAILS_ROOT
    $ bundle add dalli
    ```
-1. Configure cache_store.
+3. Configure cache_store.
    ```
    e.g.) config/environments/production.rb
    config.action_controller.perform_caching = true
    config.action_controller.cache_store = :dalli_cache_store, "localhost"
    ```
-1. Restart Redmine.
-1. Login to Redmine as an Administrator.
-1. Setup wiki graphviz-macro settings in the Plugin settings panel.
+4. Restart Redmine.
+5. Login to Redmine as an Administrator.
+6. Setup wiki graphviz-macro settings in the Plugin settings panel.
 
 ## License
 
