@@ -3,6 +3,8 @@ Redmine Wiki Graphviz-macro plugin
 
 Redmine Wiki Graphviz-macro plugin make Redmine's wiki able to render graph image.
 
+![sample](sample.png)
+
 ## Features
 
 * Add wiki macro ```{{graphviz}}```, ```{{graphviz_link}}``` and ```{{graphviz_me}}```
