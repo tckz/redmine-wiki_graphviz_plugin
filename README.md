@@ -160,7 +160,7 @@ git clone https://github.com/tckz/redmine-wiki_graphviz_plugin.git wiki_graphviz
    ```
    e.g.) config/environments/production.rb
    config.action_controller.perform_caching = true
-   config.action_controller.cache_store = :dalli_cache_store, "localhost"
+   config.action_controller.cache_store = :mem_cache_store, "localhost"
    ```
 4. Restart Redmine.
 5. Login to Redmine as an Administrator.
@@ -177,9 +177,9 @@ See COPYRIGHT.txt and GPL.txt for details.
 
 ## My environment
 
-* Based on docker image: redmine:5  
+* Based on docker image: redmine:6.1.3
   https://hub.docker.com/_/redmine/
-	* ruby-3.1.2p20
-	* redmine-5.0.2
-* graphviz-2.43.0
-* dalli 3.2.2
+	* ruby-3.4.10
+	* redmine-6.1.3
+* graphviz-2.42.4-3
+* dalli 5.0.5
