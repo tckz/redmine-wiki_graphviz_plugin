@@ -1,1 +1,1 @@
-gem 'nkf'
+gem 'rexml'
